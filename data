@@ -1,72 +1,52 @@
-package com.test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
-import java.util.StringTokenizer;
+public class NestedTestSimpleExample {
 
-public class Calculator {
-	
-	public int add(int a,int b) {
-		return a+b;
+	@BeforeAll
+	static void setUpBeforeClass() throws Exception {
+		System.out.println("@BeforeAll - Outer Class");
 	}
-	public static int findBigNum(int arr[]) {
-		int max=arr[0];
-		for(int i=0;i< arr.length;i++) {
-			if(max<arr[i]) {
-				max=arr[i];
-			}
-			
+
+	@AfterAll
+	static void tearDownAfterClass() throws Exception {
+		System.out.println("@AfterAll - Outer Class");
+	}
+
+	@BeforeEach
+	void setUp() throws Exception {
+		System.out.println("@BeforeEach - Outer Class");
+	}
+
+	@AfterEach
+	void tearDown() throws Exception {
+		System.out.println("@AfterEach - Outer Class");
+	}
+	
+	@Test
+	void test() {
+		System.out.println("Outer Class Test");
+	}
+	
+	@Nested
+	class InnerClass {
+		@BeforeEach
+		void setUp() throws Exception {
+			System.out.println("@BeforeEach - Inner Class");
 		}
-		return max;
-	}
-	
-	
-	public static String reverseApp(String input) {
-		StringBuilder data= new StringBuilder();
-		StringTokenizer st= new StringTokenizer(input,"");
-		while(st.hasMoreTokens()) {
-			StringBuilder sb= new StringBuilder();
-			sb.append(st.nextToken());
-			sb.reverse();
-			data.append(sb);
-			data.append("");
+
+		@AfterEach
+		void tearDown() throws Exception {
+			System.out.println("@AfterEach - Inner Class");
 		}
-		return data.toString();
-	}
-	
-	
-
-}
-
-
-
-package com.test;
-
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
-public class CalculatorTest {
-
-	@Test
-	public void testAdd() {
 		
-		assertEquals(10, new Calculator().add(5, 5));
-		
+		@Test
+		void test() {
+			System.out.println("Inner Class Test");
+		}
 	}
-	@Test
-	public void welcomeTest() {
-		assertEquals("welcome", "welcome");
-	}
-	@Test
-	public  void findBigTest() {
-		assertEquals(10, new Calculator().findBigNum(new int[] {4,2,10}));
-		assertEquals(-4, new Calculator().findBigNum(new int[] {-4,-12,-10}));
-
-		
-	}
-	@Test
-	public void testReverse() {
-		
-		assertEquals("welcome to java", Calculator.reverseApp("emoclew ot avaj"));
-	}
-
 }
