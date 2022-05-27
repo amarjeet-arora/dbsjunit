@@ -1,52 +1,78 @@
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
+package com.pack.mockapp;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class AppBusiness {
+	
+	private AppService appService;
+
+	public AppBusiness(AppService appService) {
+		super();
+		this.appService = appService;
+	}
+	
+public List<String> loadData(String user){
+	
+	List<String> rtd= new ArrayList<String>();
+	List<String> td= appService.loadData(user);
+	
+	for(String tds: td) {
+		if(tds.contains("admin")) {
+			rtd.add(tds);
+		}
+	}
+	return rtd;
+}
+}
+
+
+
+package com.pack.mockapp;
+
+import java.util.List;
+
+public interface AppService {
+	public List<String> loadData(String user);
+
+}
+
+
+package com.pack.mockapp;
+
+import java.util.Arrays;
+import java.util.List;
+
+public class AppServiceStub implements AppService{
+
+	@Override
+	public List<String> loadData(String user) {
+		 
+		return Arrays.asList("admin","manager","qa");
+	}
+
+}
+
+
+
+package com.pack.mockapp;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
-public class NestedTestSimpleExample {
-
-	@BeforeAll
-	static void setUpBeforeClass() throws Exception {
-		System.out.println("@BeforeAll - Outer Class");
-	}
-
-	@AfterAll
-	static void tearDownAfterClass() throws Exception {
-		System.out.println("@AfterAll - Outer Class");
-	}
-
-	@BeforeEach
-	void setUp() throws Exception {
-		System.out.println("@BeforeEach - Outer Class");
-	}
-
-	@AfterEach
-	void tearDown() throws Exception {
-		System.out.println("@AfterEach - Outer Class");
-	}
-	
+public class AppServicetest {
 	@Test
-	void test() {
-		System.out.println("Outer Class Test");
-	}
-	
-	@Nested
-	class InnerClass {
-		@BeforeEach
-		void setUp() throws Exception {
-			System.out.println("@BeforeEach - Inner Class");
-		}
-
-		@AfterEach
-		void tearDown() throws Exception {
-			System.out.println("@AfterEach - Inner Class");
-		}
+	public void testScen() {
 		
-		@Test
-		void test() {
-			System.out.println("Inner Class Test");
-		}
+		AppService aServiceStub=new AppServiceStub();
+		
+		AppBusiness ab= new AppBusiness(aServiceStub);
+		
+		List<String> rtd= ab.loadData("dummy");
+		assertEquals(2, rtd.size());
 	}
+
 }
