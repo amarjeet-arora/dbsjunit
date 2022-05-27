@@ -1,78 +1,38 @@
 package com.pack.mockapp;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class AppBusiness {
-	
-	private AppService appService;
-
-	public AppBusiness(AppService appService) {
-		super();
-		this.appService = appService;
-	}
-	
-public List<String> loadData(String user){
-	
-	List<String> rtd= new ArrayList<String>();
-	List<String> td= appService.loadData(user);
-	
-	for(String tds: td) {
-		if(tds.contains("admin")) {
-			rtd.add(tds);
-		}
-	}
-	return rtd;
-}
-}
-
-
-
-package com.pack.mockapp;
-
-import java.util.List;
-
-public interface AppService {
-	public List<String> loadData(String user);
-
-}
-
-
-package com.pack.mockapp;
-
-import java.util.Arrays;
-import java.util.List;
-
-public class AppServiceStub implements AppService{
-
-	@Override
-	public List<String> loadData(String user) {
-		 
-		return Arrays.asList("admin","manager","qa");
-	}
-
-}
-
-
-
-package com.pack.mockapp;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
 
-public class AppServicetest {
+import com.Employee;
+
+ 
+class EmployeeTest {
+
 	@Test
-	public void testScen() {
-		
-		AppService aServiceStub=new AppServiceStub();
-		
-		AppBusiness ab= new AppBusiness(aServiceStub);
-		
-		List<String> rtd= ab.loadData("dummy");
-		assertEquals(2, rtd.size());
+	void test_mockito_void() {
+		Employee emp = mock(Employee.class);
+
+		doThrow(IllegalArgumentException.class).when(emp).setName(null);
+
+		doAnswer((i) -> {
+			System.out.println("Employee setName Argument = " + i.getArgument(0));
+			assertTrue("amar".equals(i.getArgument(0)));
+			return null;
+		}).when(emp).setName(anyString());
+
+		when(emp.getName()).thenReturn("amar");
+
+		assertThrows(IllegalArgumentException.class, () -> emp.setName(null));
+
+		emp.setName("amar");
+		assertEquals("amar", emp.getName());
 	}
 
 }
